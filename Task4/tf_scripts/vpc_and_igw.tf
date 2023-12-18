@@ -6,8 +6,8 @@ locals {
 
 resource "aws_eip" "nat" {
   count = 1
-
-  vpc = true
+  #domain = module.akey_demo_vpc.public_subnets
+ 
 }
 
 module "akey_demo_vpc" {
