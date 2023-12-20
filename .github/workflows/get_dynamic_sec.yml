@@ -1,0 +1,31 @@
+####################################
+# Workflow Metadata
+###################################
+name: Get Dynamic Secret and show database
+
+
+###################################
+# workflow inputs
+###################################
+
+on:
+  workflow_dispatch:
+    inputs:
+      aws_region:
+        description: 'AWS default region'
+        type: string
+        required: true
+        default: us-west-1
+      
+
+######################
+# Jobs
+######################
+jobs:
+  get_ds_job:
+    #---------Required---------#
+    permissions: 
+      id-token: write
+      contents: read
+    #--------------------------#
+    
