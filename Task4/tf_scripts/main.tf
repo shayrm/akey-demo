@@ -35,17 +35,17 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
-resource "aws_iam_role" "role" {
-  name               = "akey-role"
-  assume_role_policy = data.aws_iam_policy_document.assume_role.json
-}
-
 data "aws_iam_policy_document" "policy" {
   statement {
     effect    = "Allow"
     actions   = ["ec2:*"]
     resources = ["*"]
   }
+}
+
+resource "aws_iam_role" "role" {
+  name               = "akey-role"
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
 resource "aws_iam_policy" "policy" {
@@ -59,15 +59,33 @@ resource "aws_iam_role_policy_attachment" "test-attach" {
   policy_arn = aws_iam_policy.policy.arn
 }
 
+resource "aws_iam_instance_profile" "akey_iam_profile" {
+  name = "akey_demo_iam_profile"
+  role = aws_iam_role.role.name
+}
+
+#resource "aws_key_pair" "ssh_key" {
+#  key_name   = "akey_key"
+#  public_key = file("~/.ssh/akey_rsa.pub")
+#}
+
+# Create an SSH key pair
+#module "key_pair" {
+#  source = "terraform-aws-modules/key-pair/aws"
+#
+#  key_name           = "akey-one"
+#  create_private_key = true
+#}
 
 # Create an EC2 instance
 resource "aws_instance" "akey_instance" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
-  key_name      = "akey_key_pair"
-  subnet_id     = aws_subnet.akey_subnet.id
+  key_name      = var.ssh_key
+  subnet_id     = module.akey_demo_vpc.private_subnets[0]
   security_groups = [aws_security_group.akey_security_group.id]
-  iam_instance_profile = aws_iam_role.akey_iam_role.name
+  iam_instance_profile = aws_iam_instance_profile.akey_iam_profile.name
+  associate_public_ip_address = true
 
   tags = {
     Name = "akey_instance"
@@ -80,8 +98,8 @@ resource "aws_instance" "akey_instance" {
               EOF
 }
 
-# Create an SSH key pair
-resource "aws_key_pair" "akey_key_pair" {
-  key_name   = "akey_key_pair"
-  public_key = file("~/.ssh/id_rsa.pub") # Change this to the path of your public key
-}
+
+#resource "aws_key_pair" "akey_key_pair" {
+#  key_name   = "akey_key_pair"
+#  public_key = file("./id_rsa.pub") # Change this to the path of your public key
+#}

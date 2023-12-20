@@ -8,6 +8,6 @@ output "instance_ec2_host_id" {
 }
 
 output "instance_public_ip" {
-  value = aws_instance.controller.public_ip
+  value = aws_instance.akey_instance.public_ip
   description = "EC2 public IP"
 }

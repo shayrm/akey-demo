@@ -10,5 +10,11 @@ variable "environment" {
 
 variable "instance_type" {
   type = string
-  default = "t4g.nano"
+  default = "t2.micro"
+}
+
+variable "ssh_key" {
+  type = string
+  default = "akey_demo"
+  
 }
