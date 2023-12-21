@@ -62,7 +62,7 @@ jobs:
           python -m pip install --upgrade pip
           pwd
           ls -la ./
-          pip install -r ./Task4/sdk-ds/requirements.txt     
+          pip install -r Task4/sdk-ds/requirements.txt     
                     
       - name: execute py script # run main.py
         env:
@@ -74,7 +74,7 @@ jobs:
           db_name: ${{ inputs.db_name }}
           db_table: ${{ inputs.db_table}}
 
-        run: python3 ./Task4/sdk-ds/get_ds.py
+        run: python3 Task4/sdk-ds/get_ds.py
 
 
 
