@@ -54,7 +54,7 @@ with akeyless.ApiClient() as api_client:
         user = api_response['user']
         password = api_response['password']
 
-        print(f'** will loging with username: {user} \n**and password: {password}' )
+        print(f'==> will loging with username: {user} \n==> and password: {password}')
 
     except ApiException as e:
         print("Exception when calling V2Api->get_dynamic_secret_value: %s\n" % e)
