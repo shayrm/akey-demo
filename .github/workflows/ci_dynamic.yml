@@ -62,7 +62,7 @@ jobs:
           python -m pip install --upgrade pip
           pwd
           ls -la ./
-          pip install -r ./Task4/sdk/requirements.txt                       
+          pip install -r ../Task4/sdk/requirements.txt                       
           
       - name: execute py script # run main.py
         env:
