@@ -75,7 +75,7 @@ jobs:
 
         run: |
           py_output=$(python3 Task4/sdk-ds/get_ds.py)
-          echo $py_output
+          echo -e $py_output
         id: step_py
 
       - name: Print output log
