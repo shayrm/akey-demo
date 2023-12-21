@@ -4,7 +4,9 @@ import env as env
 from pprint import pprint
 from akeyless.rest import ApiException
 import datetime
+import mysql
 import mysql.connector
+
 
 #load_dotenv()
 #akey_host = os.environ['akey_host']
