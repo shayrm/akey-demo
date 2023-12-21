@@ -1,0 +1,53 @@
+####################################
+# Workflow Metadata
+###################################
+name: Get Dynamic Secret and show database
+
+
+###################################
+# workflow inputs
+###################################
+
+on:
+  workflow_dispatch:
+    inputs:
+      aws_region:
+        description: 'AWS default region'
+        type: string
+        required: true
+        default: us-east-1
+
+######################
+# Jobs
+######################
+jobs:
+  get_ds_job:
+    runs-on: ubuntu-latest
+    #---------Required---------#
+    permissions: 
+      id-token: write
+      contents: read
+    #--------------------------#
+    steps:
+      - name: Fetch static secrets from Akeyless
+        uses: akeyless-github-action
+        id: fetch-secrets
+        with:
+          access-id: ${{ secrets.AKEYLESS_ACCESS_ID }}
+          access-key: ${{ secrets.AKEYLESS_ACCESS_KEY }}
+          access-type: access_key
+          static-secrets: |
+            - name: "/dev/projects/test-aky/MySod1"
+              output-name: "my_first_secret"
+              key: "imp"
+            - name: "/dev/projects/test-aky/MySod2"
+              output-name: "my_second_secret"
+      - name: Use Akeyless secret
+        run: |
+            echo "Step Outputs"
+            echo "my_first_secret: ${{ steps.fetch-secrets.outputs.my_first_secret }}" >> secrets.txt
+            echo "my_second_secret: ${{ steps.fetch-secrets.outputs.my_second_secret }}" >> secrets.txt
+            
+            echo "Environment Variables"
+            echo "my_first_secret: ${{ env.my_first_secret }}" >> secrets.txt
+            echo "my_second_secret: ${{ env.my_second_secret }}" >> secrets.txt
