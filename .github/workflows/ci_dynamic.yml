@@ -64,6 +64,7 @@ jobs:
           python -m pip install mysql-connector
                     
       - name: execute py script # run main.py
+        id: run_py
         env:
           access-id: ${{ secrets.AKEYLESS_ACCESS_ID }}
           access-key: ${{ secrets.AKEYLESS_ACCESS_KEY }}
@@ -74,13 +75,11 @@ jobs:
           db_table: ${{ inputs.db_table}}
 
         run: |
-          py_output=$(python3 Task4/sdk-ds/get_ds.py)
-          echo -e $py_output
-        id: step_py
+          python3 Task4/sdk-ds/get_ds.py
+          
+      
 
-      - name: Print output log
-        run: echo -e ${{ steps.step_py.outputs.py_output }}
-
+      
 
 
 
