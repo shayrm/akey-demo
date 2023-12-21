@@ -5,6 +5,7 @@ from pprint import pprint
 from akeyless.rest import ApiException
 import datetime
 import mysql
+import mysql.connector
 
 
 
