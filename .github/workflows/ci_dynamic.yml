@@ -45,7 +45,7 @@ on:
 ######################
 
 jobs:
-  build:
+  build-and-run:
     runs-on: ubuntu-latest
     steps:
 
@@ -70,9 +70,9 @@ jobs:
           access-key: ${{ secrets.AKEYLESS_ACCESS_KEY }}
           akey_host: ${{ inputs.akey_host }}
           akey_gateway: ${{ inputs.akey_gateway }}
-          db_host: os.environ['db_host']
-          db_name: os.environ['db_name']
-          db_table: os.environ['db_table']
+          db_host: ${{ inputs.db_host }}
+          db_name: ${{ inputs.db_name }}
+          db_table: ${{ inputs.db_table}}
 
         run: python3 ./Task4/sdk-ds/get_ds.py
 
