@@ -62,8 +62,8 @@ jobs:
           python -m pip install --upgrade pip
           pwd
           ls -la ./
-          pip install -r ./Task4/sdk/requirements.txt                       
-          
+          pip install -r ./Task4/sdk-ds/requirements.txt     
+                    
       - name: execute py script # run main.py
         env:
           access-id: ${{ secrets.AKEYLESS_ACCESS_ID }}
@@ -74,7 +74,7 @@ jobs:
           db_name: os.environ['db_name']
           db_table: os.environ['db_table']
 
-        run: python3 ./Task4/sdk/get_ds.py
+        run: python3 ./Task4/sdk-ds/get_ds.py
 
 
 
