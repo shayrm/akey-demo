@@ -74,11 +74,12 @@ jobs:
           db_table: ${{ inputs.db_table}}
 
         run: |
-          output = $(python3 Task4/sdk-ds/get_ds.py)
+          py_output=$(python3 Task4/sdk-ds/get_ds.py)
+          echo $py_output
         id: step_py
 
       - name: Print output log
-        run: echo ${{ steps.step_py.outputs.output }}
+        run: echo ${{ steps.step_py.outputs.py_output }}
 
 
 
