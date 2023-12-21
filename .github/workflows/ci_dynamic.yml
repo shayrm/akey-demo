@@ -79,7 +79,7 @@ jobs:
         id: step_py
 
       - name: Print output log
-        run: echo ${{ steps.step_py.outputs.py_output }}
+        run: echo -e ${{ steps.step_py.outputs }}
 
 
 
