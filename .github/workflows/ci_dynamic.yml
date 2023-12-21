@@ -1,75 +1,82 @@
+name: demo Akey SDK and Dynamic Secrets
 
 on:
   workflow_dispatch:
+    ##############################
+    # inputs var
+    #############################
     inputs:
       aws_region:
         description: 'AWS default region'
         type: string
         required: true
         default: us-east-1
+      akey_host:
+        description: 'Main Akey host'
+        type: string
+        required: true
+        default: "https://api.akeyless.io"
+      
+      akey_gateway:
+          description: 'Main Akey gateway'
+          type: string
+          required: true
+          default: "https://13.57.245.231.nip.io"
+      db_host:
+          description: 'db host name'
+          type: string
+          required: true
+          default: "54.241.82.232"
 
+      db_name:
+          description: 'Database name'
+          type: string
+          required: true
+          default: "akey_database"
+
+      db_table:
+          description: 'Table name'
+          type: string
+          required: true
+          default: "user_info"
+          
 ######################
 # Jobs
 ######################
+
 jobs:
-
-  sql_dynamic_secrets:
+  build:
     runs-on: ubuntu-latest
-    name: SQL dynamic secrets (default)
-    permissions:
-      id-token: write
-      contents: read
     steps:
-    - name: Checkout
-      #uses: actions/checkout@v2
-      uses: LanceMcCarthy/akeyless-action@v3.5.0
-      with:
-        fetch-depth: 0
+
+      - name: checkout repo content
+        uses: actions/checkout@v2 # checkout the repository content to github runner
+
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9' # install the python version needed
+          
+      - name: install python packages
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: execute py script # run main.py
+        env:
+          access-id: ${{ secrets.AKEYLESS_ACCESS_ID }}
+          access-key: ${{ secrets.AKEYLESS_ACCESS_KEY }}
+          akey_host: ${{ inputs.akey_host }}
+          akey_gateway: ${{ inputs.akey_gateway }}
+          db_host: os.environ['db_host']
+          db_name: os.environ['db_name']
+          db_table: os.environ['db_table']
+
+        run: python3 Task4/sdk/get_ds.py
 
 
-    - name: Fetch dynamic secrets from Akleyless
-      id: fetch-secrets
-      uses: ./
-      with:
-        access-id: ${{ secrets.AKEYLESS_ACCESS_ID }}
-        access-key: ${{ secrets.AKEYLESS_ACCESS_KEY }}
-        access-type: access_key
-        dynamic-secrets: '{"/mySQLds-1": "my_dynamic_secret"}'
 
 
-    - name: Verify Job Outputs using jq
-      run: |
-        echo "Your job output secret is ${{ steps.fetch-secrets.outputs.my_dynamic_secret }}"
-        echo "Manually parsed ID:" 
-        echo '${{ steps.fetch-secrets.outputs.my_dynamic_secret }}' | jq '.id'
-        echo "Manually parsed USER:" 
-        echo '${{ steps.fetch-secrets.outputs.my_dynamic_secret }}' | jq '.user'
-        echo "Manually parsed TTL_IN_MINUTES:" 
-        echo '${{ steps.fetch-secrets.outputs.my_dynamic_secret }}' | jq '.ttl_in_minutes'
-        echo "Manually parsed PASSWORD:"
-        echo '${{ steps.fetch-secrets.outputs.my_dynamic_secret }}' | jq '.password'
+  
 
-
-    - name: Verify Environment Variables using jq
-      run: |
-        echo "Your environment secret is ${{ env.my_dynamic_secret }}"
-        echo "Manually parsed ID:"
-        echo '${{ env.my_dynamic_secret }}' | jq '.id'
-        echo "Manually parsed USER:"
-        echo '${{ env.my_dynamic_secret }}' | jq '.user'
-        echo "Manually parsed TTL_IN_MINUTES:"
-        echo '${{ env.my_dynamic_secret }}' | jq '.ttl_in_minutes'
-        echo "Manually parsed PASSWORD:"
-        echo '${{ env.my_dynamic_secret }}' | jq '.password'
-
-
-    - name: EXTRA 1 - Export Secrets to Environment using jq
-      run: |
-        echo '${{ steps.fetch-secrets.outputs.my_dynamic_secret }}' | jq -r 'to_entries|map("AKEYLESS_\(.key)=\(.value|tostring)")|.[]' >> $GITHUB_ENV
-        
-    - name: EXTRA 2 - Verify Exported Variables
-      run: |
-        echo "AKEYLESS_id = ${{ env.AKEYLESS_id }}"
-        echo "AKEYLESS_user = ${{ env.AKEYLESS_user }}"
-        echo "AKEYLESS_password = ${{ env.AKEYLESS_password }}"
-        echo "AKEYLESS_ttl_in_minutes = ${{ env.AKEYLESS_ttl_in_minutes }}"
+  
