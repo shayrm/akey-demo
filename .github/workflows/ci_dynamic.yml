@@ -21,7 +21,7 @@ on:
           description: 'Main Akey gateway'
           type: string
           required: true
-          default: "https://13.57.245.231.nip.io"
+          default: "https://54.219.122.226.nip.io"
       db_host:
           description: 'db host name'
           type: string
