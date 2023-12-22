@@ -68,6 +68,8 @@ def main():
   cursor.execute(query)
   q_result = cursor.fetchall()
 
+  print(f'Current output from table {env.db_table}')
+  print('===============================================')
   for x in q_result:
     print(x)
 
