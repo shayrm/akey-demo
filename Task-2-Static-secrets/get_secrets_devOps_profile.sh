@@ -3,7 +3,7 @@
 RED='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo "will use Read,List DevOps profile to get secrets from Akeyless vault:"
+echo -e "\nwill use Read,List DevOps profile to get secrets from Akeyless vault:"
 echo "========================================================================="
 cat ~/.akeyless/profiles/devops.toml |grep id -A1
 

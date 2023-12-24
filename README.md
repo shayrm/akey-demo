@@ -173,6 +173,8 @@ Use a K8s application pod and a Sidecar pod (plugin) to fetch a secret from the 
 
 Code and reference files could be found in [Task 5](./Task-5-k8s-plugin/) directory
 
+![k8s injection](https://files.readme.io/fcf538d-k8s-injection.png)
+
 ### Task execution
 
 The following commands were run on the Akeyless gateway.
