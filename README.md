@@ -5,7 +5,7 @@ Demo with Akeyless technology and DFC (Disterbuted Fragment Cryptogrphy)
 
 Answering some theoretical questions before demo description.
 
-### UI management and features
+## UI management and features
 
 #### 1. What are Authentication Methods?
    An Authentication Method is the mechanism that a human or machine uses to prove they are who they say they are in order to access a service. In our case we're talking about accessing secrets. 
@@ -49,13 +49,13 @@ The user can define any number of roles with permissions per each role.
    Akeyless acts as a Certificate Authority for the internal environment. Supporting both types of PKI/TLS Certificates and SSH certificates.
 
 
-### System Architecture
+## System Architecture
 
 For this task the following Cloud architecture was build:
 
 ![system arch](images/Akey_PoC.jpg)
 
-### Fetching a Static secret
+## Fetching a Static secret
 This task includes:
 
 a. Create a new token/api-key (auth method)
@@ -63,7 +63,7 @@ b. assign it to a new Access Role with read+list permissions for the ‘MySecret
 
 Run the scripts in [Task -2](./Task-2-Static-secrets/)
 
-### Fetching Dynamic Secrets
+## Fetching Dynamic Secrets
 
 Create and fetch a Dynamic Secret (SQL-DB) within a simple code example (SDK) or Jenkins (or any CI/CD)
 
@@ -164,7 +164,7 @@ jobs:
 ```
 
 
-### Kubernetes Plugins
+## Kubernetes Plugins
 
 More information and reference found in [K8s plugin page](https://docs.akeyless.io/docs/kubernetes-plugins)
 And in the [tutorial](https://tutorials.akeyless.io/docs/injecting-secrets-into-a-kubernetes-cluster) page
@@ -173,7 +173,7 @@ Use a K8s application pod and a Sidecar pod (plugin) to fetch a secret from the 
 
 Code and reference files could be found in [Task 5](./Task-5-k8s-plugin/) directory
 
-#### Task execution
+### Task execution
 
 The following commands were run on the Akeyless gateway.
 
@@ -261,7 +261,7 @@ The following commands were run on the Akeyless gateway.
   > Make sure you copy the "=" sign at the end the private key.
 
 
-4. Create Kubernetes Auth Config on your Gateway
+6. Create Kubernetes Auth Config on your Gateway
   Open a new tab and run the following command to start the server which allows access to the Kubernetes API server from within a cluster:
 
   ```shell
@@ -273,22 +273,23 @@ The following commands were run on the Akeyless gateway.
   K8S_ISSUER=$(curl -s http://localhost:8001/k8s-api/.well-known/openid-configuration | jq -r .issuer)
   ```
 
-5. Create k8s authentication config for the gateway. 
+7. Create k8s authentication config for the gateway. 
 
-  ```shell
-  akeyless gateway-create-k8s-auth-config  --name k8s-conf \
-  --gateway-url  https://54.219.122.226.nip.io \
-  --access-id $ACCESS_ID \
-  --signing-key $PRV_KEY \
-  --k8s-host https://79A20081870AAEE59072BC1837340896.gr7.us-west-1.eks.amazonaws.com \
-  --token-reviewer-jwt $SA_JWT_TOKEN \
-  --k8s-ca-cert $CA_CERT \
-  --k8s-issuer $K8S_ISSUER
+    ```shell
+    akeyless gateway-create-k8s-auth-config  --name k8s-conf \
+    --gateway-url  https://54.219.122.226.nip.io \
+    --access-id $ACCESS_ID \
+    --signing-key $PRV_KEY \
+    --k8s-host https://79A20081870AAEE59072BC1837340896.gr7.us-west-1.eks.amazonaws.com \
+    --token-reviewer-jwt $SA_JWT_TOKEN \
+    --k8s-ca-cert $CA_CERT \
+    --k8s-issuer $K8S_ISSUER
 
-  ```
+    ```
 
-6. Install the Injector
-   get helm repo
+8. Install the Injector
+   
+   Get helm repo
    
    ```shell
    helm repo add akeyless https://akeylesslabs.github.io/helm-charts
@@ -296,10 +297,11 @@ The following commands were run on the Akeyless gateway.
 
    ```
    
-  create values.yaml file
+  create and update values.yaml file
   ```shell
   helm show values akeyless/akeyless-secrets-injection > values.yaml
   ```
+  
   edit values.yaml file
 
   ```shell
@@ -323,45 +325,45 @@ The following commands were run on the Akeyless gateway.
   ```
   
 
-  install helm
+9. install helm
 
-  ```shell
-  helm install aks akeyless/akeyless-secrets-injection --namespace akeyless -f values.yaml
-  ```
+    ```shell
+    helm install aks akeyless/akeyless-secrets-injection --namespace akeyless -f values.yaml
+    ```
 
-  The Create the init Container and Inject a Secret at Runtime
+    The Create the init Container and Inject a Secret at Runtime
 
-  ```shell
-  cat << EOF > pod_to_get_secret.yaml
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: test
-  spec:
-    replicas: 1
-    selector:
-      matchLabels:
-        app: hello-secrets
-    template:
-      metadata:
-        labels:
+    ```shell
+    cat << EOF > pod_to_get_secret.yaml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: test
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
           app: hello-secrets
-        annotations:
-          akeyless/enabled: "true"
-      spec:
-        containers:
-        - name: alpine
-          image: alpine
-          command:
-            - "sh"
-            - "-c"
-            - "echo $MY_SECRET && echo going to sleep... && sleep 10000"
-          env:
-          - name: MY_SECRET
-            value: akeyless:/dev/projects/test-aky/MySod1
-  EOF
-  ```
-
+      template:
+        metadata:
+          labels:
+            app: hello-secrets
+          annotations:
+            akeyless/enabled: "true"
+        spec:
+          containers:
+          - name: alpine
+            image: alpine
+            command:
+              - "sh"
+              - "-c"
+              - "echo $MY_SECRET && echo going to sleep... && sleep 10000"
+            env:
+            - name: MY_SECRET
+              value: akeyless:/dev/projects/test-aky/MySod1
+    EOF
+    ```
+  
   for sidecar container:
 
   ```shell
