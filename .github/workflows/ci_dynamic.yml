@@ -44,7 +44,7 @@ on:
 # Jobs
 ######################
 env:
-  WORK_DIR: "/home/shayrm/Tools/Demos/akey-demo/Task-4-Dynamic-secrets/sdk-ds"
+  WORK_DIR: "Task-4-Dynamic-secrets/sdk-ds"
 
 jobs:
   build-and-run:
