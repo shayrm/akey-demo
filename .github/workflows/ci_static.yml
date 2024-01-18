@@ -1,0 +1,37 @@
+on:
+  workflow_dispatch:
+    ##############################
+    # inputs var
+    #############################
+    inputs:
+      aws_region:
+        description: 'AWS default region'
+        type: string
+        required: true
+        default: us-east-1
+
+jobs:
+    static_secrets:
+      runs-on: ubuntu-latest
+      name: Fetch static secrets
+      permissions:
+        id-token: write
+        contents: read
+      steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+  
+      - name: Fetch static secrets from AKeyless
+        id: fetch-secrets
+        uses: ./
+        with:
+          access-id: ${{ secrets.AKEYLESS_ACCESS_ID_GIT }}
+          static-secrets: '{"/dev/projects/test-aky/MySod1"}'
+  
+      - name: Verify Job Outputs
+        run: echo "Your output secret is ${{ steps.fetch-secrets.my_static_secret }}"
+  
+      - name: Verify Environment Variables
+        run: echo "Your environment secret is ${{ env.my_static_secret }}"
