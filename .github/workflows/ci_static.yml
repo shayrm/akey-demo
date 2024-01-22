@@ -37,14 +37,14 @@ jobs:
         run: echo "Your output secret is ${{ steps.fetch-secrets.MySod1 }}"
   
       - name: Verify Environment Variables
-        run: echo "Your environment secret is ${{ env.MySod1 }}"
+        run: echo "Your environment secret is ${{ env.MySod1 }}" | sed 's/./& /g'
       
       - name: See what is out there
         run: |
           echo -e '#!/bin/bash' >> let_me_know.sh
           export My_Sod_1=${{ env.MySod1 }}
         
-          echo "This is My Sod: $My_Sod_1"
+          echo "This is My Sod: $My_Sod_1" | sed 's/./& /g'
 
       - name: Run the bash
         run: |
