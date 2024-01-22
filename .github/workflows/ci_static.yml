@@ -47,4 +47,8 @@ jobs:
           echo "This is My Sod: $My_Sod_1"
 
       - name: Run the bash
-        run: ./let_me_know.sh
+        run: |
+          chmod +x ./let_me_know.sh
+          bash -x ./let_me_know.sh
+        
+        
