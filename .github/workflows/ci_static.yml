@@ -28,7 +28,7 @@ jobs:
   
       - name: Fetch static secrets from AKeyless
         id: fetch-secrets
-        uses: LanceMcCarthy/akeyless-action@v3.1.1
+        uses: LanceMcCarthy/akeyless-action@v3.5.1
         with:
           access-id: ${{ secrets.AKEYLESS_ACCESS_ID_GIT }}
           static-secrets: '{"/dev/projects/test-aky/MySod1"}'
