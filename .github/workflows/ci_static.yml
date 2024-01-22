@@ -31,10 +31,10 @@ jobs:
         uses: LanceMcCarthy/akeyless-action@v3.5.1
         with:
           access-id: ${{ secrets.AKEYLESS_ACCESS_ID_GIT }}
-          static-secrets: '{"static1": "/dev/projects/test-aky/MySod1"}'
+          static-secrets: '{"/dev/projects/test-aky/MySod1": "MySod1"}'
   
       - name: Verify Job Outputs
-        run: echo "Your output secret is ${{ steps.fetch-secrets.static1 }}"
+        run: echo "Your output secret is ${{ steps.fetch-secrets.MySod1 }}"
   
-      #- name: Verify Environment Variables
-      #  run: echo "Your environment secret is ${{ env.my_static_secret }}"
+      - name: Verify Environment Variables
+        run: echo "Your environment secret is ${{ env.MySod1 }}"
