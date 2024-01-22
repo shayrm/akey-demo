@@ -34,10 +34,10 @@ jobs:
           static-secrets: '{"/dev/projects/test-aky/MySod1": "MySod1"}'
   
       - name: Verify Job Outputs
-        run: echo "Your output secret is ${{ steps.fetch-secrets.MySod1 }}" >> $GITHUB_OUTPUT
+        run: echo "Your output secret is ${{ steps.fetch-secrets.MySod1 }}"
   
       - name: Verify Environment Variables
-        run: echo "Your environment secret is ${{ env.MySod1 }}" >> $GITHUB_OUTPUT
+        run: echo "Your environment secret is ${{ env.MySod1 }}"
       
       - name: See what is out there
         run: |
